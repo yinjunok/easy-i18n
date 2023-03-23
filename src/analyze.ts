@@ -61,7 +61,6 @@ const analyze = (file: ReadFileType) => {
         keys.add(value)
         path.replaceWith(t.jsxExpressionContainer(createI18nCallExpression(value)))
         path.skip()
-        return
       }
     },
     ImportDeclaration(path) {

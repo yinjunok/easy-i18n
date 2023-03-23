@@ -13,6 +13,7 @@ const config: Config = {
   },
   /**
    * 参考文档: https://cloud.tencent.com/document/product/551/40566
+   * zh: 简体中文
    * en: 英语
    * ja: 日语
    * es: 西班牙语
@@ -21,7 +22,7 @@ const config: Config = {
    * id: 印尼语
    * zh-Tw: 繁体中文
   */
-  targetLanguage: ['en', 'ja', 'es', 'tr', 'th', 'id', 'zh-TW']
+  targetLanguage: ['zh', 'en', 'ja', 'es', 'tr', 'th', 'id', 'zh-TW']
 }
 
 export default config

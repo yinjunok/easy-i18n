@@ -14,11 +14,15 @@ const analyze = (file: ReadFileType) => {
    * 收集中文 key
   */
   const keys = new Set<string>()
+  let needDealWithTemplate = false
   traverse(ast, {
     Program: {
       exit(path) {
         if (keys.size > 0) {
           path.unshiftContainer('body', template(`import { formatMessage } from 'umi-plugin-react/locale';`)())
+        }
+        if (needDealWithTemplate) {
+          path.unshiftContainer('body', template(`import { i18nTaggedTemplates } from '@/utils/utils'`)())
         }
       }
     },
@@ -35,6 +39,7 @@ const analyze = (file: ReadFileType) => {
         const value = removeEmptyChar(q.value.raw)
         if (hasReplaceChar(value)) {
           keys.add(value)
+          needDealWithTemplate = true
           needReplace = true
         }
       })

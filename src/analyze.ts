@@ -22,36 +22,28 @@ const analyze = (file: ReadFileType) => {
         }
       }
     },
+    TaggedTemplateExpression(path) {
+      path.skip()
+    },
     /**
-     * `字符串 ${a + b} 字符串` -> `${"字符串"} ${a + b} ${"字符串"}`
-     * 字符串部分, StringLiteral | JSXText visitor 会替换成 formatMessage()
+     * `字符串 ${a + b} 字符串` -> i18nTaggedTemplates`${"字符串"} ${a + b} ${"字符串"}`
     */
     TemplateLiteral(path) {
-      const { expressions, quasis } = path.node;
-      let enCountExpressions = 0;
-      quasis.forEach((node, index) => {
-        const raw = node.value.raw;
-        if (hasReplaceChar(raw)) {
-          let newCall = t.stringLiteral(raw);
-          expressions.splice(index + enCountExpressions, 0, newCall);
-          enCountExpressions++;
-          node.value = {
-            raw: '',
-            cooked: '',
-          };
-          // 每增添一个表达式都需要变化原始节点,并新增下一个字符节点
-          quasis.push(
-            t.templateElement(
-              {
-                raw: '',
-                cooked: '',
-              },
-              false,
-            ),
-          );
+      const { quasis } = path.node
+      let needReplace = false
+      quasis.forEach(q => {
+        const value = removeEmptyChar(q.value.raw)
+        if (hasReplaceChar(value)) {
+          keys.add(value)
+          needReplace = true
         }
-      });
-      quasis[quasis.length - 1].tail = true;
+      })
+      if (needReplace) {
+        path.replaceWith(
+          t.taggedTemplateExpression(t.identifier('i18nTaggedTemplates'), path.node)
+        )
+      }
+      path.skip()
     },
     CallExpression(path) {
       if (t.isIdentifier(path.node.callee, { name: "formatMessage" })) {

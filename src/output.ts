@@ -3,6 +3,7 @@ import generate from "@babel/generator";
 import { outputFile } from 'fs-extra'
 import prettier from 'prettier'
 import config from './config'
+import { genKey } from './utils'
 import type { TranslateType } from './translate'
 
 export type FileTranslateLanguage = [string, { [Key: string]: string }]
@@ -15,7 +16,7 @@ const localesgGnerator = (sourceTextList: TranslateType['sourceTextList'], trans
   return translateText.map(trans => {
     const language: FileTranslateLanguage = [trans[0], {}]
     sourceTextList.forEach((text, i) => {
-      language[1][text] = trans[1][i]
+      language[1][genKey(text)] = trans[1][i]
     })
     return language
   })

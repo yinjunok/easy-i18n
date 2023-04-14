@@ -1,4 +1,4 @@
-import { from, map, reduce, of, zip, concatMap, delay } from 'rxjs'
+import { from, map, reduce, of, zip, concatMap, delay, finalize } from 'rxjs'
 import * as tencentcloud from 'tencentcloud-sdk-nodejs'
 import { AnalyzeResult } from './analyze'
 import config from './config'
@@ -21,13 +21,6 @@ const translator = new TranslatorClient({
 
 export type TranslateText = [string, string[]]
 
-// translator.TextTranslateBatch({
-//   Source: 'auto',
-//   Target: language,
-//   SourceTextList: [...file.keys],
-//   ProjectId: 0
-// })
-
 const translate = (file: AnalyzeResult) => {
   const sourceTextList = [...file.keys]
   return from(config.targetLanguage).pipe(
@@ -44,7 +37,10 @@ const translate = (file: AnalyzeResult) => {
       return zip(of(language), request$)
     }),
     reduce((acc: TranslateText[], cur) => { acc.push(cur); return [...acc] }, []),
-    map(translateText => ({ ...file, sourceTextList, translateText }))
+    map(translateText => ({ ...file, sourceTextList, translateText })),
+    finalize(() => {
+      console.log('完成翻译文件: ', file.path.relativePath)
+    })
   )
 }
 

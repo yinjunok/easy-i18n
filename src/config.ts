@@ -4,9 +4,10 @@ import tencent from '../tencent-key'
 const config: Config = {
   input: 'test-files/**/*.js',
   outputDir: 'languages',
-  // replaceCharRange: /[^\x00-\xff]/g,
-  replaceCharRange: /[\u4E00-\u9FFF]/g,
+  replaceCharRange: /[\u4E00-\u9FFF]/,
   replaceResource: false,
+  keyPrefix: 'translate',
+  separator: '__',
   Tencent: {
     SecretId: tencent.SecretId,
     SecretKey: tencent.SecretKey

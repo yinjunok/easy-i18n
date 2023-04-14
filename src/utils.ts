@@ -16,6 +16,11 @@ export const hasReplaceChar = (str: string): boolean => {
 }
 
 /**
+ * 生成 key
+*/
+export const genKey = (val: string) => `${config.keyPrefix ?? ''}${config.separator ?? ''}${val}`
+
+/**
  * 创建替换文本的 i18n 函数调用
 */
 export const createI18nCallExpression = (val: string): t.CallExpression => {

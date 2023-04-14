@@ -15,6 +15,15 @@ export type Config = {
   */
   replaceResource: boolean
   /**
+   * key 前缀
+  */
+  keyPrefix?: string
+  /**
+   * key 前缀分隔符
+   * prefixkey -> prefix__key
+  */
+  separator?: string
+  /**
    * 需要忽略的文件
   */
   ignore?: Parameters<typeof glob>[1]['ignore']

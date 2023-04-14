@@ -24,7 +24,7 @@ export const genKey = (val: string) => `${config.keyPrefix ?? ''}${config.separa
  * 创建替换文本的 i18n 函数调用
 */
 export const createI18nCallExpression = (val: string): t.CallExpression => {
-  const params = t.objectExpression([t.objectProperty(t.identifier('id'), t.stringLiteral(val))])
+  const params = t.objectExpression([t.objectProperty(t.identifier('id'), t.stringLiteral(genKey(val)))])
   const callNode = t.callExpression(t.identifier('formatMessage'), [params]);
   return callNode
 }
